@@ -1,1 +1,2 @@
-#no rule set 123
+#no rule seT 123
+# no ruleset
