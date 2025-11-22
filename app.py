@@ -1,2 +1,23 @@
-#no rule seT 123
-# no ruleset
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+	return render_template('index.html')
+
+
+@app.route('/assets')
+def assets():
+	return render_template('assets.html')
+
+
+@app.route('/workorders')
+def workorders():
+	return render_template('workorders.html')
+
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=5000, debug=True)

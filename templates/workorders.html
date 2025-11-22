@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Work Orders{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>Work Orders</h2>
+  <form id="woForm" class="inline-form">
+    <select id="wo-asset-id" name="asset_id"></select>
+    <input id="wo-description" name="description" placeholder="Short description" required />
+    <button type="submit">Create Work Order</button>
+  </form>
+  <table class="list">
+    <thead><tr><th>ID</th><th>Asset</th><th>Description</th><th>Status</th><th>Created</th></tr></thead>
+    <tbody id="wos-tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='cmms.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  CMMS.seedIfEmpty();
+  CMMS.populateAssetSelect('#wo-asset-id');
+  CMMS.renderWorkOrdersTable('#wos-tbody');
+  document.getElementById('woForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const asset_id = document.getElementById('wo-asset-id').value;
+    const desc = document.getElementById('wo-description').value.trim();
+    if (!desc) return;
+    CMMS.addWorkOrder(asset_id ? parseInt(asset_id,10) : null, desc);
+    CMMS.renderWorkOrdersTable('#wos-tbody');
+    CMMS.renderDashboardCounts('#dash-assets', '#dash-wos');
+    document.getElementById('woForm').reset();
+    CMMS.populateAssetSelect('#wo-asset-id');
+  });
+});
+</script>
+{% endblock %}

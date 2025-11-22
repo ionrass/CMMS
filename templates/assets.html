@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Assets{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>Assets</h2>
+  <form id="assetForm" class="inline-form">
+    <input id="asset-name" name="name" placeholder="Asset name" required />
+    <input id="asset-location" name="location" placeholder="Location" />
+    <button type="submit">Add Asset</button>
+  </form>
+  <table class="list">
+    <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Created</th></tr></thead>
+    <tbody id="assets-tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='cmms.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  CMMS.seedIfEmpty();
+  CMMS.renderAssetsTable('#assets-tbody');
+  document.getElementById('assetForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('asset-name').value.trim();
+    const location = document.getElementById('asset-location').value.trim();
+    if (!name) return;
+    CMMS.addAsset(name, location);
+    CMMS.renderAssetsTable('#assets-tbody');
+    CMMS.renderDashboardCounts('#dash-assets', '#dash-wos');
+    document.getElementById('assetForm').reset();
+  });
+});
+</script>
+{% endblock %}
